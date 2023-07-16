@@ -1,9 +1,12 @@
 class ApplicationController < ActionController::Base
-end
+  before_action :basic_auth
+  
 
-def create
-  article = Article.new(article_params)
-  if article.save
-    render json: {article: article}
+  private
+
+  def basic_auth
+    authenticate_or_request_with_http_basic do |username, password|
+      username == ENV["BASIC_AUTH_USER"] && password == ENV["BASIC_AUTH_PASSWORD"]
+    end
   end
 end
